@@ -1,1 +1,191 @@
 EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:kicad-library
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L CONNECTORS_JACK_FEMALE_STEREO_6_PINS J?
+U 1 1 56216077
+P 2300 1800
+F 0 "J?" H 2850 1300 60  0000 C CNN
+F 1 "JACK_FEMALE_STEREO" H 1750 1300 60  0000 C CNN
+F 2 "" H 2750 1750 60  0000 C CNN
+F 3 "" H 2750 1750 60  0000 C CNN
+	1    2300 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 562160A4
+P 3650 1800
+F 0 "R?" V 3730 1800 50  0000 C CNN
+F 1 "R" V 3650 1800 50  0000 C CNN
+F 2 "" V 3580 1800 30  0000 C CNN
+F 3 "" H 3650 1800 30  0000 C CNN
+	1    3650 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L ZENER D?
+U 1 1 562160DD
+P 4000 1300
+F 0 "D?" H 4000 1400 50  0000 C CNN
+F 1 "ZENER" H 4000 1200 50  0000 C CNN
+F 2 "" H 4000 1300 60  0000 C CNN
+F 3 "" H 4000 1300 60  0000 C CNN
+	1    4000 1300
+	0    1    1    0   
+$EndComp
+$Comp
+L ZENER D?
+U 1 1 5621613F
+P 4000 1800
+F 0 "D?" H 4000 1900 50  0000 C CNN
+F 1 "ZENER" H 4000 1700 50  0000 C CNN
+F 2 "" H 4000 1800 60  0000 C CNN
+F 3 "" H 4000 1800 60  0000 C CNN
+	1    4000 1800
+	0    1    1    0   
+$EndComp
+NoConn ~ 2850 1750
+NoConn ~ 2850 1650
+Text Label 3350 2150 2    60   ~ 0
+DETECT_01
+Wire Wire Line
+	3650 1950 3650 2050
+Wire Wire Line
+	4000 2050 4000 2000
+Wire Wire Line
+	2850 2050 4000 2050
+Connection ~ 3650 2050
+Wire Wire Line
+	2850 1950 3500 1950
+Wire Wire Line
+	3500 1950 3500 1550
+Wire Wire Line
+	3500 1550 4000 1550
+Wire Wire Line
+	4000 1500 4000 1600
+Connection ~ 4000 1550
+Wire Wire Line
+	3650 1650 3650 1550
+Connection ~ 3650 1550
+$Comp
+L VCC #PWR?
+U 1 1 56216340
+P 4000 1050
+F 0 "#PWR?" H 4000 900 50  0001 C CNN
+F 1 "VCC" H 4000 1200 50  0000 C CNN
+F 2 "" H 4000 1050 60  0000 C CNN
+F 3 "" H 4000 1050 60  0000 C CNN
+	1    4000 1050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4000 1100 4000 1050
+NoConn ~ 2850 1850
+Wire Wire Line
+	2850 2150 3350 2150
+$Comp
+L R R?
+U 1 1 56216424
+P 4450 1950
+F 0 "R?" V 4530 1950 50  0000 C CNN
+F 1 "R" V 4450 1950 50  0000 C CNN
+F 2 "" V 4380 1950 30  0000 C CNN
+F 3 "" H 4450 1950 30  0000 C CNN
+	1    4450 1950
+	1    0    0    -1  
+$EndComp
+$Comp
+L R R?
+U 1 1 56216473
+P 4750 1750
+F 0 "R?" V 4830 1750 50  0000 C CNN
+F 1 "R" V 4750 1750 50  0000 C CNN
+F 2 "" V 4680 1750 30  0000 C CNN
+F 3 "" H 4750 1750 30  0000 C CNN
+	1    4750 1750
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	3800 2050 3800 2200
+Connection ~ 3800 2050
+$Comp
+L GND #PWR?
+U 1 1 562164C4
+P 3800 2200
+F 0 "#PWR?" H 3800 1950 50  0001 C CNN
+F 1 "GND" H 3800 2050 50  0000 C CNN
+F 2 "" H 3800 2200 60  0000 C CNN
+F 3 "" H 3800 2200 60  0000 C CNN
+	1    3800 2200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 2100 4450 2200
+$Comp
+L GND #PWR?
+U 1 1 56216505
+P 4450 2200
+F 0 "#PWR?" H 4450 1950 50  0001 C CNN
+F 1 "GND" H 4450 2050 50  0000 C CNN
+F 2 "" H 4450 2200 60  0000 C CNN
+F 3 "" H 4450 2200 60  0000 C CNN
+	1    4450 2200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 1600 4450 1800
+Wire Wire Line
+	4450 1750 4600 1750
+Wire Wire Line
+	4450 1600 4550 1600
+Connection ~ 4450 1750
+Wire Wire Line
+	4900 1750 5250 1750
+Wire Wire Line
+	5250 1750 5250 1450
+Wire Wire Line
+	5250 1450 4950 1450
+$EndSCHEMATC
