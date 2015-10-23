@@ -1735,11 +1735,11 @@ Wire Wire Line
 Wire Wire Line
 	13700 4350 14050 4350
 Text Label 14050 4350 2    60   ~ 0
-RX
-Text Label 12050 1550 0    60   ~ 0
-RX
+TX
+Text Label 12050 1650 0    60   ~ 0
+TX
 Wire Wire Line
-	12050 1550 12550 1550
+	12050 1650 12550 1650
 Wire Wire Line
 	14950 1450 15050 1450
 Wire Wire Line
@@ -1860,7 +1860,6 @@ Wire Wire Line
 	11900 1500 11900 1450
 Wire Wire Line
 	11900 1450 12550 1450
-NoConn ~ 12550 1650
 NoConn ~ 12550 2550
 NoConn ~ 12550 2650
 NoConn ~ 12550 2750
@@ -2201,4 +2200,5 @@ Wire Wire Line
 	15400 6600 15600 6600
 Connection ~ 15600 6600
 Connection ~ 15400 6600
+NoConn ~ 12550 1550
 $EndSCHEMATC
