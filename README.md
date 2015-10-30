@@ -8,7 +8,7 @@ Up to 8 piezo sensors with MIDI out (standard and USB) to make an electronic dru
 
 # Proof of concept
 
-Proof of concept done with an Arduino Micro board:
+Proof of concept done with an Arduino Micro board (click on the images below to go to the videos):
 
 [![MIDI Experiments with Arduino](http://img.youtube.com/vi/2-d8FWZnlz4/0.jpg)](http://www.youtube.com/watch?v=2-d8FWZnlz4)
 
