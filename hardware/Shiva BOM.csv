@@ -1,0 +1,13 @@
+Component,Amount,Reference,Seller,Unit Cost,Cost,
+Jack Female 6.35mm THD,8,568-NYS219 ,Mouser,0.724,5.792,
+Diode Zener 3.3V SOD-323,16,863-MM3Z3V3T1G,Mouser,0.127,2.032,
+Resistor 0603 220R,2,71-CRCW0603-220-E3,Mouser,0.0091,0.0182,
+Regulator LD1117S33CTR,1,511-LD1117S33C,Mouser,0.462,0.462,
+Resistor 0805 ~320M,8,667-ERJ-6GEYJ106V,Mouser,0.081,0.648,
+Op-Amp LTC6242,2,-,-,,0,(samples)
+Socket DIN 5 female THD,1,502-57PC5F,Mouser,2.33,2.33,
+R1,8,588-AS08J1002ET,Mouser,0.054,0.432,
+R2,8,667-ERJ-6GEYJ203V,Mouser,0.081,0.648,
+Capacitor 0805 ceramic 100nF,3,80-C0805C104K3R,Mouser,0.091,0.273,
+Capacitor 1206 polarized 10uF,1,647-F931A106MAA,Mouser,0.091,0.091,
+,,,,Total:,12.7262,
