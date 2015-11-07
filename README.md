@@ -6,7 +6,17 @@ Up to 8 piezo sensors with MIDI out (standard and USB) to make an electronic dru
 <img src="doc/images/Shiva-pcb.png" width="400" align="center">
 </p>
 
-# Proof of concept
+## v0.1 Prototype
+### PCBs
+
+<p align="center">
+<img src="doc/images/Shiva_v0_1_front.jpg" width="400" align="center">
+</p>
+<p align="center">
+<img src="doc/images/Shiva_v0_1_back.jpg" width="400" align="center">
+</p>
+
+## Proof of concept
 
 Proof of concept done with an Arduino Micro board (click on the images below to go to the videos):
 
