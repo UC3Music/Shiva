@@ -24,6 +24,10 @@ Proof of concept done with an Arduino Micro board (click on the images below to 
 
 [![MIDI Experiments with Arduino (2)](http://img.youtube.com/vi/U5sJlg9klXo/0.jpg)](http://www.youtube.com/watch?v=U5sJlg9klXo)
 
+# Acknowledgments
+
+ * Inspired by KORG's [CLIPHIT](http://www.korg.com/us/products/drums/cliphit/)
+ * Conditioning circuit for piezo sensors is based on [ScienceProg's circuit](http://www.scienceprog.com/thoughts-on-interfacing-piezo-vibration-sensor/)
 
 # Credits
 * Author: [David Estevez Fernandez](https://github.com/David-Estevez)
