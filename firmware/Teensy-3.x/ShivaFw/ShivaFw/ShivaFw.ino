@@ -76,6 +76,12 @@ void loop()
   }
 
   //-- Take care of serial commands
+  //-- Available commands:
+  //-- S0 -> Enable verbose mode
+  //-- S1 -> Disable verbose mode
+  //-- S2CxVy -> Edit note y in channel x
+  //-- S3CxVy -> Edit note y in channel x
+  //-- S4CxVy -> Edit note y in channel x
   if (incoming_cmd)
   {
     //-- Parse command
@@ -102,6 +108,28 @@ void loop()
         uint8_t value = buffer.substring(value_start+1).toInt();
         if (channel < N_CHANNELS)
           notes[channel] = value;
+        Serial.println("Ok");
+      }
+      else if (buffer[1]=='3')
+      {
+        //-- Edit upper threshold (trigger) per channel
+        uint8_t channel_start = buffer.indexOf('C', 1);
+        uint8_t value_start = buffer.indexOf('V', channel_start);
+        uint8_t channel = buffer.substring(channel_start+1, value_start).toInt();
+        uint8_t value = buffer.substring(value_start+1).toInt();
+        if (channel < N_CHANNELS)
+          trigger_thresholds[channel] = value;
+        Serial.println("Ok");
+      }
+      else if (buffer[1]=='4')
+      {
+        //-- Edit lower threshold (off) per channel
+        uint8_t channel_start = buffer.indexOf('C', 1);
+        uint8_t value_start = buffer.indexOf('V', channel_start);
+        uint8_t channel = buffer.substring(channel_start+1, value_start).toInt();
+        uint8_t value = buffer.substring(value_start+1).toInt();
+        if (channel < N_CHANNELS)
+          off_thresholds[channel] = value;
         Serial.println("Ok");
       }
     }
