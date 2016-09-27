@@ -39,6 +39,7 @@ void loop()
   static uint16_t off_thresholds[N_CHANNELS] = {50, 50, 50, 50, 50, 50, 50, 50};
   static uint8_t states[N_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0};
   static uint8_t channel_enabled[N_CHANNELS] = {0, 1, 0, 0, 0, 0, 0};
+  static uint8_t notes[N_CHANNELS] = {49, 49, 49, 49, 49, 49, 49, 49};
   static uint8_t verbose = false;
 
 
@@ -58,14 +59,14 @@ void loop()
     {
       //-- Transition to state "ON" and send on note
       states[i] = 1;
-      usbMIDI.sendNoteOn(49, 64, 9);   // middle C, normal velocity, channel 9
+      usbMIDI.sendNoteOn(notes[i], 64, 9);   // middle C, normal velocity, channel 9
       usbMIDI.send_now();
     }
     else if (states[i] == 1 && sensor_values[i] < off_thresholds[i])
     {
       //-- Transition to state "OFF" and send off note
       states[i] = 0;
-      usbMIDI.sendNoteOff(49, 64, 9);  //  middle C, normal velocity, channel 9
+      usbMIDI.sendNoteOff(notes[i], 64, 9);  //  middle C, normal velocity, channel 9
       usbMIDI.send_now();
     }
   }
@@ -82,11 +83,27 @@ void loop()
     {
       if (buffer[1]=='0')
       {
+        //-- Enable verbose mode
         verbose = true;
         Serial.println("Ok");
       }
       else if (buffer[1]=='1')
+      {
+        //-- Disable verbose mode
         verbose = false;
+        Serial.println("Ok");
+      }
+      else if (buffer[1]=='2')
+      {
+        //-- Edit note per channel
+        uint8_t channel_start = buffer.indexOf('C', 1);
+        uint8_t value_start = buffer.indexOf('V', channel_start);
+        uint8_t channel = buffer.substring(channel_start+1, value_start).toInt();
+        uint8_t value = buffer.substring(value_start+1).toInt();
+        if (channel < N_CHANNELS)
+          notes[channel] = value;
+        Serial.println("Ok");
+      }
     }
 
     //-- Erase buffer
