@@ -21,6 +21,9 @@ static const uint8_t input_pins[N_CHANNELS] = {A2, A3, A4, A5, A9, A8, A7, A6};
 static const uint8_t channel_detect[N_CHANNELS] = {9, 8, 7, 6, 2, 3, 4, 5};
 #define BAUD_RATE 9600
 
+//-- Serial stuff
+String buffer = "";
+bool incoming_cmd = false;
 
 void setup() {
   Serial.begin(BAUD_RATE);
@@ -36,11 +39,17 @@ void loop()
   static uint16_t off_thresholds[N_CHANNELS] = {50, 50, 50, 50, 50, 50, 50, 50};
   static uint8_t states[N_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0};
   static uint8_t channel_enabled[N_CHANNELS] = {0, 1, 0, 0, 0, 0, 0};
+  static uint8_t verbose = false;
+
 
   //-- Read analog inputs for active channels
   for (uint8_t i = 0; i < N_CHANNELS; i++)
     if (channel_enabled[i])
+    {
       sensor_values[i] = analogRead(input_pins[i]);
+      if (verbose)
+        Serial.println("S"+String(i)+"V"+String(sensor_values[i]));
+    }
 
   //-- Manage state transitions for all channels
   for (uint8_t i = 0; i < N_CHANNELS; i++)
@@ -65,6 +74,39 @@ void loop()
   while (usbMIDI.read()) {
   }
 
+  //-- Take care of serial commands
+  if (incoming_cmd)
+  {
+    //-- Parse command
+    if (buffer[0]=='S')
+    {
+      if (buffer[1]=='0')
+      {
+        verbose = true;
+        Serial.println("Ok");
+      }
+      else if (buffer[1]=='1')
+        verbose = false;
+    }
+
+    //-- Erase buffer
+    incoming_cmd = false;
+    buffer = "";
+
+  }
   //-- Short delay to let ADC settle after the last reading
   delay(2);
+}
+
+
+//-- Reads the incoming chars and stores them in the buffer
+void serialEvent()
+{
+  while (Serial.available())
+  {
+    char inChar = (char)Serial.read();
+    buffer += inChar;
+    if (inChar == '\n')
+      incoming_cmd = true;
+  }
 }
