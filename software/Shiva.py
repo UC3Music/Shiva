@@ -48,6 +48,9 @@ class Shiva:
         # Open port
         self.serialPort.open()
 
+    def close(self):
+        self.serialPort.close()
+
     def sendCommand(self, command):
         """
         Sends a command over serial port
