@@ -90,7 +90,7 @@ class ShivaGUI(QtGui.QWidget):
         self.offThresholdSliders.append(widget.findChild(QtGui.QSlider, 'offThresholdSlider'))
 
         # Connect signals
-        self.noteComboBoxes[-1].currentIndexChanged.connect(lambda: self.onNoteComboBoxSelectionChanged(channel_index))
+        self.noteComboBoxes[-1].currentIndexChanged.connect(lambda: self.onSoundComboBoxSelectionChanged(channel_index))
         self.triggerThresholdSliders[-1].sliderReleased.connect(lambda : self.onTriggerThresholdSliderReleased(channel_index))
         self.offThresholdSliders[-1].sliderReleased.connect(lambda : self.onOffThresholdSliderReleased(channel_index))
 
@@ -138,14 +138,21 @@ class ShivaGUI(QtGui.QWidget):
             self.resetChannelWidgets()
             self.toggleChannelWidgets(False)
 
-    def onNoteComboBoxSelectionChanged(self, channel):
-        print("Channel {}: {}".format(channel, self.noteComboBoxes[channel].currentText()))
+    def onSoundComboBoxSelectionChanged(self, channel):
+        sound = self.noteComboBoxes[channel].currentText()
+        if sound:
+            print("Channel {}> Sound: {}".format(channel, sound))
+            shiva.setSound(channel, sound)
 
     def onTriggerThresholdSliderReleased(self, channel):
-        print("Channel {}: {}".format(channel, self.triggerThresholdSliders[channel].value()))
+        value = self.triggerThresholdSliders[channel].value()
+        print("Channel {}> Trigger: {}".format(channel, value))
+        shiva.setThresholds(channel, trigger=value)
 
     def onOffThresholdSliderReleased(self, channel):
-        print("Channel {}: {}".format(channel, self.offThresholdSliders[channel].value()))
+        value = self.offThresholdSliders[channel].value()
+        print("Channel {}> Off: {}".format(channel, value))
+        shiva.setThresholds(channel, off=value)
 
     def getSerialPorts(self):
         """
