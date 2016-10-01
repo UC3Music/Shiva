@@ -85,6 +85,7 @@ void loop()
   //-- S5Cx -> Query current note for channel x
   //-- S6Cx -> Query current upper threshold (trigger) y in channel x
   //-- S7Cx -> Query current lower threshold (off) y in channel x
+  //-- S8Cx -> Query channel status (enabled/disabled)
   if (incoming_cmd)
   {
     //-- Parse command
@@ -155,6 +156,13 @@ void loop()
         uint8_t channel = buffer.substring(3).toInt();
         if (channel < N_CHANNELS)
           Serial.println("S7C"+String(channel)+"V"+String(off_thresholds[channel]));
+      }
+      else if (buffer[1]=='8')
+      {
+        //-- Query status (enabled/disabled) for channel x
+        uint8_t channel = buffer.substring(3).toInt();
+        if (channel < N_CHANNELS)
+          Serial.println("S8C"+String(channel)+"V"+String(channel_enabled[channel]));
       }
 
     }
