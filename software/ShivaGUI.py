@@ -120,7 +120,7 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
         for i in range(self.num_channels):
             #self.channelGroups[i].setChecked(bool(self.enabled_channels[i]))
             self.noteComboBoxes[i].clear()
-            self.noteComboBoxes[i].addItems(list(self.shiva.drums.keys()))
+            self.noteComboBoxes[i].addItems(list(sorted(self.shiva.drums.keys())))
             self.triggerThresholdSliders[i].setMinimum(0)
             self.triggerThresholdSliders[i].setMaximum(self.max_resolution-1)
             self.offThresholdSliders[i].setMinimum(0)
