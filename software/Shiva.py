@@ -9,6 +9,8 @@ __author__ = 'David Estevez Fernandez'
 __license__ = 'GPLv3'
 
 import serial
+import serial.threaded
+from .LevelFeedbackReader import LevelFeedbackReader
 
 
 class Shiva:
@@ -31,7 +33,8 @@ class Shiva:
 
     def __init__(self):
         self.serialPort = None
-
+        self.lineReader = LevelFeedbackReader()
+        self.readerThread = None
 
     def connect(self, name, baudRate):
         """
@@ -63,15 +66,27 @@ class Shiva:
 
     def enableFeedback(self):
         """
-            Enable channel feedback (Command S0)
+            Enable channel feedback (Command S0) and starts the LevelFeedbackLineReader
         """
-        self.sendCommand("S0")
+        if self.readerThread is None:
+            self.readerThread = serial.threaded.ReaderThread(self.serialPort, self.lineReader)
+            self.readerThread.start()
+
 
     def disableFeedback(self):
         """
-            Disable channel feedback (Command S1)
+            Disable channel feedback (Command S1) and stops the LevelFeedbackLineReader
         """
-        self.sendCommand("S1")
+        if self.readerThread is not None:
+            self.sendCommand("S1")
+            self.readerThread.stop()
+            self.readerThread = None
+
+    def addFeedbackListener(self, listener):
+        """
+            Adds a LevelFeedbackReaderListener to be notified of incoming data in verbose mode
+        """
+        self.lineReader.add_listener(listener)
 
     def setSound(self, channel=-1, sound="Crash Cymbal 1"):
         """
@@ -110,9 +125,6 @@ class Shiva:
                     self.sendCommand("S4C{}V{}".format(i, off))
             else:
                 self.sendCommand("S4C{}V{}".format(channel, off))
-
-
-
 
     def _readPort(self):
         """
