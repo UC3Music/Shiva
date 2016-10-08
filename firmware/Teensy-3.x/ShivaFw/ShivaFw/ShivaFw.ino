@@ -49,7 +49,7 @@ void loop()
     {
       sensor_values[i] = analogRead(input_pins[i]);
       if (verbose)
-        Serial.println("S"+String(i)+"V"+String(sensor_values[i]));
+        Serial.println("S0C"+String(i)+"V"+String(sensor_values[i]));
     }
 
   //-- Manage state transitions for all channels
