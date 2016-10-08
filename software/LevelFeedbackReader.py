@@ -75,12 +75,14 @@ class LevelFeedbackReader(serial.threaded.LineReader):
         """
         return self
 
+class BasicLevelFeedbackReaderListener(LevelFeedbackReaderListener):
+    """
+    Very simple listener that dumps received info to stdout
+    """
+    def notify(self, command, channel, value):
+        print("{} {} {}".format(command, channel, value))
 
 if __name__ == '__main__':
-    class BasicLevelFeedbackReaderListener(LevelFeedbackReaderListener):
-        def notify(self, command, channel, value):
-            print("{} {} {}".format(command, channel, value))
-
     ser = serial.Serial("/dev/ttyACM0", 9600)
     l = BasicLevelFeedbackReaderListener()
     line_reader = LevelFeedbackReader()
