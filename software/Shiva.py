@@ -10,7 +10,7 @@ __license__ = 'GPLv3'
 
 import serial
 import serial.threaded
-from .LevelFeedbackReader import LevelFeedbackReader
+from LevelFeedbackReader import LevelFeedbackReader
 
 
 class Shiva:
@@ -68,9 +68,14 @@ class Shiva:
         """
             Enable channel feedback (Command S0) and starts the LevelFeedbackLineReader
         """
-        if self.readerThread is None:
-            self.readerThread = serial.threaded.ReaderThread(self.serialPort, self.lineReader)
-            self.readerThread.start()
+        try:
+            if self.readerThread is None:
+                self.readerThread = serial.threaded.ReaderThread(self.serialPort, self.lineReader)
+                self.readerThread.start()
+        except AttributeError:
+            raise Shiva.ShivaNotConnectedException
+        finally:
+            self.readerThread = None
 
 
     def disableFeedback(self):
