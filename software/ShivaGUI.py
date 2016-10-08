@@ -3,6 +3,8 @@ from PySide import QtUiTools
 import os, sys
 import glob
 from Shiva import Shiva
+from serial.serialutil import SerialException
+from LevelFeedbackReader import LevelFeedbackReaderListener
 
 def load_ui(file_name, where=None):
     """
@@ -26,16 +28,19 @@ def load_ui(file_name, where=None):
 
     return ui
 
-class ShivaGUI(QtGui.QWidget):
+class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
     default_baudrate = 9600
     num_channels = 8
     max_resolution = 1024
+    valueBarsSignals = QtCore.Signal(int) # [QtCore.Signal(int) for i in range(num_channels)]
 
     def __init__(self, parent=None, shiva=None):
         QtGui.QWidget.__init__(self, parent)
+        LevelFeedbackReaderListener.__init__(self)
 
         # Interface to board is required
         self.shiva = shiva
+        self.shiva.addFeedbackListener(self)
         self.enabled_channels = [0, 1, 0, 0, 0, 0, 0, 0]
 
         # Widgets to be created
@@ -46,12 +51,15 @@ class ShivaGUI(QtGui.QWidget):
 
         self.channelGroups = []
         self.noteComboBoxes = []
+        self.valueBars = []
         self.triggerThresholdSliders = []
         self.offThresholdSliders = []
 
         self.setupUI()
         self.resetValues()
         self.resetChannelWidgets()
+
+        self.valueBarsSignals.connect(self.valueBars[1].setValue)
 
     def setupUI(self):
         ui_file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'Shiva.ui')
@@ -86,11 +94,15 @@ class ShivaGUI(QtGui.QWidget):
         self.channelGroups.append(widget.findChild(QtGui.QGroupBox, 'groupBox'))
         self.channelGroups[-1].setTitle("Channel " + str(channel_index))
         self.noteComboBoxes.append(widget.findChild(QtGui.QComboBox, 'noteComboBox'))
+        value_bar = widget.findChild(QtGui.QProgressBar, 'valueBar')
+        value_bar.setRange(0, self.max_resolution-1)
+        self.valueBars.append(value_bar)
         self.triggerThresholdSliders.append(widget.findChild(QtGui.QSlider, 'triggerThresholdSlider'))
         self.offThresholdSliders.append(widget.findChild(QtGui.QSlider, 'offThresholdSlider'))
 
         # Connect signals
         self.noteComboBoxes[-1].currentIndexChanged.connect(lambda: self.onSoundComboBoxSelectionChanged(channel_index))
+        #self.valueBarsSignals[-1].connect(self.valueBars[-1].setValue)
         self.triggerThresholdSliders[-1].sliderReleased.connect(lambda : self.onTriggerThresholdSliderReleased(channel_index))
         self.offThresholdSliders[-1].sliderReleased.connect(lambda : self.onOffThresholdSliderReleased(channel_index))
 
@@ -130,19 +142,24 @@ class ShivaGUI(QtGui.QWidget):
             baudrate = int(self.lineEdit.text())
             port = self.comboBox.currentText()
             self.shiva.connect(port, baudrate)
+            self.shiva.enableFeedback()
             self.connectButton.setText('Disconnect')
             self.toggleChannelWidgets(True)
         elif self.connectButton.text() == 'Disconnect':
+            self.shiva.disableFeedback()
             self.shiva.close()
             self.connectButton.setText('Connect')
             self.resetChannelWidgets()
             self.toggleChannelWidgets(False)
 
     def onSoundComboBoxSelectionChanged(self, channel):
-        sound = self.noteComboBoxes[channel].currentText()
-        if sound:
-            print("Channel {}> Sound: {}".format(channel, sound))
-            shiva.setSound(channel, sound)
+        try:
+            sound = self.noteComboBoxes[channel].currentText()
+            if sound:
+                print("Channel {}> Sound: {}".format(channel, sound))
+                shiva.setSound(channel, sound)
+        except (Shiva.ShivaNotConnectedException, SerialException) as e:
+            pass
 
     def onTriggerThresholdSliderReleased(self, channel):
         value = self.triggerThresholdSliders[channel].value()
@@ -160,7 +177,12 @@ class ShivaGUI(QtGui.QWidget):
 		"""
         return glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*') + glob.glob("/dev/tty.*") + glob.glob("/dev/cu.*") + glob.glob("/dev/rfcomm*")
 
-
+    def notify(self, command, channel, value):
+        print("Received: {} {} {}".format(command, channel, value))
+        if command == 0:
+            if self.enabled_channels[channel]:
+                print("\tPrint this value!")
+                self.valueBarsSignals.emit(value)
 
 if __name__ == '__main__':
 

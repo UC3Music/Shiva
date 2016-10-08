@@ -55,12 +55,14 @@ class LevelFeedbackReader(serial.threaded.LineReader):
         channel and value of the sender command.
         :return: Three items: command id, channel id and value (all None if the data was invalid)
         """
+        print(response)
         s = response.find('S')
-        if s != -1:
-            c = response[s+1:].find('C') + s+1
-            v = response[c+1:].find('V') + c+1
+        c = response[s+1:].find('C') + s+1
+        v = response[c+1:].find('V') + c+1
+
+        try:
             return int(response[s+1:c]), int(response[c+1:v]), int(response[v+1:])
-        else:
+        except ValueError:
             return None, None, None
 
     def add_listener(self, listener):
