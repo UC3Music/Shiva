@@ -32,7 +32,7 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
     default_baudrate = 9600
     num_channels = 8
     max_resolution = 1024
-    valueBarsSignals = QtCore.Signal(int) # [QtCore.Signal(int) for i in range(num_channels)]
+    feedback_arrived = QtCore.Signal(int, int)
 
     def __init__(self, parent=None, shiva=None):
         QtGui.QWidget.__init__(self, parent)
@@ -58,8 +58,6 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
         self.setupUI()
         self.resetValues()
         self.resetChannelWidgets()
-
-        self.valueBarsSignals.connect(self.valueBars[1].setValue)
 
     def setupUI(self):
         ui_file_path = os.path.join(os.path.realpath(os.path.dirname(__file__)), 'Shiva.ui')
@@ -102,7 +100,7 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
 
         # Connect signals
         self.noteComboBoxes[-1].currentIndexChanged.connect(lambda: self.onSoundComboBoxSelectionChanged(channel_index))
-        #self.valueBarsSignals[-1].connect(self.valueBars[-1].setValue)
+        self.feedback_arrived.connect(lambda c, v:self.valueBars[c].setValue(v))
         self.triggerThresholdSliders[-1].sliderReleased.connect(lambda : self.onTriggerThresholdSliderReleased(channel_index))
         self.offThresholdSliders[-1].sliderReleased.connect(lambda : self.onOffThresholdSliderReleased(channel_index))
 
@@ -180,9 +178,10 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
     def notify(self, command, channel, value):
         print("Received: {} {} {}".format(command, channel, value))
         if command == 0:
-            if self.enabled_channels[channel]:
-                print("\tPrint this value!")
-                self.valueBarsSignals.emit(value)
+            if not self.enabled_channels[channel]:
+                self.enabled_channels[channel] = 1
+                self.toggleChannelWidgets(True)
+            self.feedback_arrived.emit(channel, value)
 
 if __name__ == '__main__':
 
