@@ -1445,11 +1445,11 @@ Text Label 15600 2150 2    60   ~ 0
 CHANNEL_04
 Wire Wire Line
 	14950 2150 15600 2150
-Text Label 15600 2250 2    60   ~ 0
+Text Label 15600 2350 2    60   ~ 0
 CHANNEL_03
 Wire Wire Line
 	14950 2250 15600 2250
-Text Label 15600 2350 2    60   ~ 0
+Text Label 15600 2250 2    60   ~ 0
 CHANNEL_02
 Wire Wire Line
 	14950 2350 15600 2350
@@ -2201,4 +2201,12 @@ Wire Wire Line
 	3350 5250 3350 5300
 Wire Wire Line
 	3350 3200 3350 3150
+Text Notes 14800 3250 0    60   ~ 0
+(Swapping these channels \nsimplifies routing)
+Wire Notes Line
+	15850 2200 15850 3050
+Wire Notes Line
+	15850 2300 15650 2300
+Wire Notes Line
+	15650 2200 15850 2200
 $EndSCHEMATC
