@@ -260,8 +260,6 @@ F 3 "" H 3350 3900 60  0000 C CNN
 $EndComp
 NoConn ~ 2200 3900
 NoConn ~ 2200 3800
-Text Label 2700 4300 2    60   ~ 0
-DETECT_02
 Wire Wire Line
 	3000 4050 3000 4200
 Wire Wire Line
@@ -294,7 +292,7 @@ F 3 "" H 3350 3150 60  0000 C CNN
 $EndComp
 NoConn ~ 2200 4000
 Wire Wire Line
-	2200 4300 2700 4300
+	2200 4300 2950 4300
 $Comp
 L R R6
 U 1 1 56242AAE
@@ -430,8 +428,6 @@ F 3 "" H 3350 6000 60  0000 C CNN
 $EndComp
 NoConn ~ 2200 6000
 NoConn ~ 2200 5900
-Text Label 2700 6400 2    60   ~ 0
-DETECT_03
 Wire Wire Line
 	3000 6150 3000 6300
 Wire Wire Line
@@ -464,7 +460,7 @@ F 3 "" H 3350 5250 60  0000 C CNN
 $EndComp
 NoConn ~ 2200 6100
 Wire Wire Line
-	2200 6400 2700 6400
+	2200 6400 2950 6400
 $Comp
 L R R7
 U 1 1 56244EE9
@@ -600,7 +596,7 @@ F 3 "" H 3300 8050 60  0000 C CNN
 $EndComp
 NoConn ~ 2150 8050
 NoConn ~ 2150 7950
-Text Label 2650 8450 2    60   ~ 0
+Text Label 11900 8100 0    60   ~ 0
 DETECT_04
 Wire Wire Line
 	2950 8250 2950 8350
@@ -636,7 +632,7 @@ Wire Wire Line
 	3300 7300 3300 7350
 NoConn ~ 2150 8150
 Wire Wire Line
-	2150 8450 2650 8450
+	2150 8450 2900 8450
 $Comp
 L R R5
 U 1 1 56244F56
@@ -772,7 +768,7 @@ F 3 "" H 8500 1800 60  0000 C CNN
 $EndComp
 NoConn ~ 7350 1800
 NoConn ~ 7350 1700
-Text Label 7850 2200 2    60   ~ 0
+Text Label 13750 4650 0    60   ~ 0
 DETECT_05
 Wire Wire Line
 	8150 2000 8150 2100
@@ -808,7 +804,7 @@ Wire Wire Line
 	8500 1050 8500 1100
 NoConn ~ 7350 1900
 Wire Wire Line
-	7350 2200 7850 2200
+	7350 2200 8100 2200
 $Comp
 L R R20
 U 1 1 562466F3
@@ -944,7 +940,7 @@ F 3 "" H 8450 3850 60  0000 C CNN
 $EndComp
 NoConn ~ 7300 3850
 NoConn ~ 7300 3750
-Text Label 7800 4250 2    60   ~ 0
+Text Label 13750 5800 0    60   ~ 0
 DETECT_06
 Wire Wire Line
 	8100 4050 8100 4150
@@ -980,7 +976,7 @@ Wire Wire Line
 	8450 3100 8450 3150
 NoConn ~ 7300 3950
 Wire Wire Line
-	7300 4250 7800 4250
+	7300 4250 8050 4250
 $Comp
 L R R18
 U 1 1 56246760
@@ -1116,7 +1112,7 @@ F 3 "" H 8450 5950 60  0000 C CNN
 $EndComp
 NoConn ~ 7300 5950
 NoConn ~ 7300 5850
-Text Label 7800 6350 2    60   ~ 0
+Text Label 13850 7000 0    60   ~ 0
 DETECT_07
 Wire Wire Line
 	8100 6100 8100 6250
@@ -1152,7 +1148,7 @@ Wire Wire Line
 	8450 5200 8450 5250
 NoConn ~ 7300 6050
 Wire Wire Line
-	7300 6350 7800 6350
+	7300 6350 8050 6350
 $Comp
 L R R19
 U 1 1 562467CD
@@ -1288,7 +1284,7 @@ F 3 "" H 8400 8000 60  0000 C CNN
 $EndComp
 NoConn ~ 7250 8000
 NoConn ~ 7250 7900
-Text Label 7750 8400 2    60   ~ 0
+Text Label 13850 8150 0    60   ~ 0
 DETECT_08
 Wire Wire Line
 	8050 8150 8050 8300
@@ -1324,7 +1320,7 @@ Wire Wire Line
 	8400 7250 8400 7300
 NoConn ~ 7250 8100
 Wire Wire Line
-	7250 8400 7750 8400
+	7250 8400 8000 8400
 $Comp
 L R R17
 U 1 1 5624683A
@@ -2301,7 +2297,7 @@ Wire Wire Line
 Wire Wire Line
 	13000 4200 12950 4200
 Text Label 11800 5750 0    60   ~ 0
-DETECT_01
+DETECT_02
 $Comp
 L VCC #PWR?
 U 1 1 5AB28638
@@ -2385,14 +2381,10 @@ Wire Wire Line
 Wire Wire Line
 	12650 6050 11850 6050
 Connection ~ 12650 5750
-Text Label 11850 6050 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	12200 5350 12200 5200
 Wire Wire Line
 	13000 5350 12950 5350
-Text Label 13750 4650 0    60   ~ 0
-DETECT_01
 $Comp
 L VCC #PWR?
 U 1 1 5AB289D5
@@ -2476,14 +2468,10 @@ Wire Wire Line
 Wire Wire Line
 	14600 4950 13800 4950
 Connection ~ 14600 4650
-Text Label 13800 4950 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	14150 4250 14150 4100
 Wire Wire Line
 	14950 4250 14900 4250
-Text Label 13750 5800 0    60   ~ 0
-DETECT_01
 $Comp
 L VCC #PWR?
 U 1 1 5AB28A06
@@ -2567,14 +2555,12 @@ Wire Wire Line
 Wire Wire Line
 	14600 6100 13800 6100
 Connection ~ 14600 5800
-Text Label 13800 6100 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	14150 5400 14150 5250
 Wire Wire Line
 	14950 5400 14900 5400
 Text Label 11900 6950 0    60   ~ 0
-DETECT_01
+DETECT_03
 $Comp
 L VCC #PWR?
 U 1 1 5AB2939E
@@ -2658,14 +2644,10 @@ Wire Wire Line
 Wire Wire Line
 	12750 7250 11950 7250
 Connection ~ 12750 6950
-Text Label 11950 7250 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	12300 6550 12300 6400
 Wire Wire Line
 	13100 6550 13050 6550
-Text Label 11900 8100 0    60   ~ 0
-DETECT_01
 $Comp
 L VCC #PWR?
 U 1 1 5AB293CF
@@ -2749,14 +2731,10 @@ Wire Wire Line
 Wire Wire Line
 	12750 8400 11950 8400
 Connection ~ 12750 8100
-Text Label 11950 8400 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	12300 7700 12300 7550
 Wire Wire Line
 	13100 7700 13050 7700
-Text Label 13850 7000 0    60   ~ 0
-DETECT_01
 $Comp
 L VCC #PWR?
 U 1 1 5AB29400
@@ -2840,14 +2818,10 @@ Wire Wire Line
 Wire Wire Line
 	14700 7300 13900 7300
 Connection ~ 14700 7000
-Text Label 13900 7300 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	14250 6600 14250 6450
 Wire Wire Line
 	15050 6600 15000 6600
-Text Label 13850 8150 0    60   ~ 0
-DETECT_01
 $Comp
 L VCC #PWR?
 U 1 1 5AB29431
@@ -2931,10 +2905,36 @@ Wire Wire Line
 Wire Wire Line
 	14700 8450 13900 8450
 Connection ~ 14700 8150
-Text Label 13900 8450 0    60   ~ 0
-CHANNEL_01_SW
 Wire Wire Line
 	14250 7750 14250 7600
 Wire Wire Line
 	15050 7750 15000 7750
+Text Label 2950 4300 2    60   ~ 0
+CHANNEL_02_SW
+Text Label 2900 8450 2    60   ~ 0
+CHANNEL_04_SW
+Text Label 8100 2200 2    60   ~ 0
+CHANNEL_05_SW
+Text Label 8050 4250 2    60   ~ 0
+CHANNEL_06_SW
+Text Label 8050 6350 2    60   ~ 0
+CHANNEL_07_SW
+Text Label 8000 8400 2    60   ~ 0
+CHANNEL_08_SW
+Text Label 2950 6400 2    60   ~ 0
+CHANNEL_03_SW
+Text Label 13900 7300 0    60   ~ 0
+CHANNEL_07_SW
+Text Label 13900 8450 0    60   ~ 0
+CHANNEL_08_SW
+Text Label 13800 6100 0    60   ~ 0
+CHANNEL_06_SW
+Text Label 13800 4950 0    60   ~ 0
+CHANNEL_05_SW
+Text Label 11850 6050 0    60   ~ 0
+CHANNEL_02_SW
+Text Label 11950 7250 0    60   ~ 0
+CHANNEL_03_SW
+Text Label 11950 8400 0    60   ~ 0
+CHANNEL_04_SW
 $EndSCHEMATC
