@@ -25,10 +25,23 @@ static const uint8_t channel_detect[N_CHANNELS] = {9, 8, 7, 6, 2, 3, 4, 5};
 String buffer = "";
 bool incoming_cmd = false;
 
-void setup() {
+void set_as_outputs() 
+{
+  for (int i = 0; i < N_CHANNELS; i++)
+    pinMode(channel_detect[i], OUTPUT);
+}
+
+void setup() 
+{
   Serial.begin(BAUD_RATE);
   Serial.println("Shiva by UC3Music");
-
+  
+  set_as_outputs();
+  for (int i = 0; i < N_CHANNELS; i++)
+  {
+    digitalWrite(channel_detect[i], HIGH);
+    delay(200);
+  }
 }
 
 void loop()
@@ -38,7 +51,7 @@ void loop()
   static uint16_t trigger_thresholds[N_CHANNELS] = {100, 100, 100, 100, 100, 100, 100, 100};
   static uint16_t off_thresholds[N_CHANNELS] = {50, 50, 50, 50, 50, 50, 50, 50};
   static uint8_t states[N_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0};
-  static uint8_t channel_enabled[N_CHANNELS] = {1, 1, 0, 0, 0, 0, 0};
+  static uint8_t channel_enabled[N_CHANNELS] = {1, 1, 1, 1, 0, 0, 0, 0};
   static uint8_t notes[N_CHANNELS] = {49, 49, 49, 49, 49, 49, 49, 49};
   static uint8_t verbose = false;
 
