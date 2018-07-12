@@ -6,6 +6,11 @@ Up to 8 piezo sensors with MIDI out (standard and USB) to make an electronic dru
 <img src="doc/images/Shiva-pcb.png" width="400" align="center">
 </p>
 
+## v1.0 Prototype
+### Known bugs
+
+[Known bugs](https://github.com/UC3Music/Shiva/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
 ## v0.1 Prototype
 ### PCBs
 
