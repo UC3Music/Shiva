@@ -14,6 +14,7 @@
 
 #include <Arduino.h>
 #include <MIDI.h>
+#include <Bounce.h>
 
 //-- Constants
 #define N_CHANNELS 8
@@ -29,8 +30,17 @@ bool incoming_cmd = false;
 
 //-- Global variables
 static uint8_t channel_enabled[N_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0};
-static uint8_t led_status[N_CHANNELS] = {0, 0, 0, 1, 1, 0, BLINKING, 1};
-static elapsedMillis since_led_update;
+static uint8_t led_status[N_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0};
+static elapsedMillis since_sensor_detect;
+
+//-- Joystick-related
+static uint8_t button_pins[5] = {A0, 10, 12, A1, 11}; //-- up, down, left, right, enter
+static Bounce buttons[5] = { Bounce(button_pins[0], 10), //-- 10ms debounce
+                             Bounce(button_pins[1], 10),
+                             Bounce(button_pins[2], 10),
+                             Bounce(button_pins[3], 10),
+                             Bounce(button_pins[4], 10)};
+static uint8_t button_status[5] = {0, 0, 0, 0, 0};
 
 
 void update_leds() 
@@ -59,6 +69,13 @@ void read_channel_status()
 
 void setup() 
 {
+  //-- Init joystick
+  for (int i = 0; i < 5; i++)
+  {
+    pinMode(button_pins[i], INPUT_PULLUP);
+  }
+
+  //-- Init serial port
   Serial.begin(BAUD_RATE);
   Serial.println("Shiva by UC3Music");
 
@@ -83,7 +100,33 @@ void loop()
   static uint8_t verbose = true;
 
   //-- Detect active channels
-  //read_channel_status();
+  if (since_sensor_detect >= 500) //-- 500ms
+  {
+    since_sensor_detect-=500;
+    read_channel_status();
+    update_leds();
+  }
+
+
+  //-- Read joystick
+  for (uint8_t i = 0; i < 5; i++)
+  {
+    if (buttons[i].update())
+      if (buttons[i].risingEdge())
+        button_status[i] = 1;
+  }
+
+  //-- Check status (dummy test for development)
+  for (uint8_t i = 0; i < 5; i++)
+    if (button_status[i]==1)
+    {
+      button_status[i]=0;
+      for (uint8_t j=0; j < N_CHANNELS; j++)
+        led_status[j] = 0;
+      led_status[i] = BLINKING;
+      update_leds();
+    }
+    
 
   //-- Read analog inputs for active channels
   for (uint8_t i = 0; i < N_CHANNELS; i++)
