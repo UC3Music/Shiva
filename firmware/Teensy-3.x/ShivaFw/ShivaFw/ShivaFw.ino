@@ -17,6 +17,8 @@
 
 //-- Constants
 #define N_CHANNELS 8
+#define BLINKING 2
+#define BLINKING_RATE 2
 static const uint8_t input_pins[N_CHANNELS] = {A2, A3, A4, A5, A9, A8, A7, A6};
 static const uint8_t channel_detect[N_CHANNELS] = {9, 8, 7, 6, 2, 3, 4, 5};
 #define BAUD_RATE 9600
@@ -27,12 +29,23 @@ bool incoming_cmd = false;
 
 //-- Global variables
 static uint8_t channel_enabled[N_CHANNELS] = {0, 0, 0, 0, 0, 0, 0, 0};
+static uint8_t led_status[N_CHANNELS] = {0, 0, 0, 1, 1, 0, BLINKING, 1};
+static elapsedMillis since_led_update;
 
 
-void set_as_outputs() 
+void update_leds() 
 {
   for (int i = 0; i < N_CHANNELS; i++)
-    pinMode(channel_detect[i], OUTPUT);
+  {
+    //if (channel_enabled[i])  //-- LEDs will only turn on if the piezo sensor is present (hw constraints)
+    {
+      pinMode(channel_detect[i], OUTPUT);
+      if (led_status[i] == BLINKING)
+        tone(channel_detect[i], BLINKING_RATE);
+      else
+        digitalWrite(channel_detect[i], led_status[i]==1);
+    }
+   }
 }
 
 void read_channel_status()
@@ -48,13 +61,15 @@ void setup()
 {
   Serial.begin(BAUD_RATE);
   Serial.println("Shiva by UC3Music");
-  
-  set_as_outputs();
+
+  //-- Flash LEDs at startup
   for (int i = 0; i < N_CHANNELS; i++)
   {
     digitalWrite(channel_detect[i], HIGH);
     delay(200);
   }
+
+  update_leds();
 }
 
 void loop()
@@ -68,7 +83,7 @@ void loop()
   static uint8_t verbose = true;
 
   //-- Detect active channels
-  read_channel_status();
+  //read_channel_status();
 
   //-- Read analog inputs for active channels
   for (uint8_t i = 0; i < N_CHANNELS; i++)
@@ -199,6 +214,7 @@ void loop()
     buffer = "";
 
   }
+  
   //-- Short delay to let ADC settle after the last reading
   delay(2);
 }
