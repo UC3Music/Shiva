@@ -78,7 +78,7 @@ void update_leds()
 {
   for (int i = 0; i < N_CHANNELS; i++)
   {
-    //if (channel_enabled[i])  //-- LEDs will only turn on if the piezo sensor is present (hw constraints)
+    if (channel_enabled[i])  //-- LEDs will only turn on if the piezo sensor is present (hw constraints)
     {
       pinMode(channel_detect[i], OUTPUT);
       if (led_status[i] == BLINKING)
@@ -95,7 +95,8 @@ void read_channel_status()
   {
     noTone(i); //-- Tone interferes with status detection
     pinMode(channel_detect[i], INPUT_PULLUP);
-    channel_enabled[i]=digitalRead(channel_detect[i]);
+    channel_enabled[i]=(int)digitalRead(channel_detect[i]);
+    led_status[i]=channel_enabled[i];
   }
 }
 
@@ -239,7 +240,7 @@ void loop()
           button_status[i] = 1;
   }
 
-
+  /*
   //-- Check status (dummy test for development)
   for (uint8_t i = 0; i < 5; i++)
     if (button_status[i]==1)
@@ -250,6 +251,7 @@ void loop()
       led_status[i] = BLINKING;
       update_leds();
     }
+    */
     
 
   //-- Read analog inputs for active channels
