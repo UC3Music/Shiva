@@ -72,9 +72,13 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
         self.portButton = self.findChild(QtGui.QPushButton, 'portButton')
         self.connectButton = self.findChild(QtGui.QPushButton, 'connectButton')
 
+        # Create a timer
+        self.updateTimer = QtCore.QTimer(self)
+
         # Connect widgets to actions
         self.portButton.clicked.connect(self.resetValues)
         self.connectButton.clicked.connect(self.onConnectClicked)
+        self.updateTimer.timeout.connect(self.queryShivaStatus)
 
         # Load channels ui
         for i in range(self.num_channels):
@@ -141,9 +145,8 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
             port = self.comboBox.currentText()
             self.shiva.connect(port, baudrate)
             self.shiva.enableFeedback()
-            self.shiva.querySound()
-            self.shiva.queryThresholds()
-            self.shiva.queryChannelStatus()
+            self.queryShivaStatus()
+            self.updateTimer.start(50)
             self.connectButton.setText('Disconnect')
             self.toggleChannelWidgets(True)
         elif self.connectButton.text() == 'Disconnect':
@@ -151,7 +154,13 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
             self.shiva.close()
             self.connectButton.setText('Connect')
             self.resetChannelWidgets()
+            self.updateTimer.stop()
             self.toggleChannelWidgets(False)
+
+    def queryShivaStatus(self):
+        self.shiva.querySound()
+        self.shiva.queryThresholds()
+        self.shiva.queryChannelStatus()
 
     def onSoundComboBoxSelectionChanged(self, channel):
         try:
