@@ -41,7 +41,7 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
         # Interface to board is required
         self.shiva = shiva
         self.shiva.addFeedbackListener(self)
-        self.enabled_channels = [0, 1, 0, 0, 0, 0, 0, 0]
+        self.enabled_channels = [0, 0, 0, 0, 0, 0, 0, 0]
 
         # Widgets to be created
         self.comboBox = None
@@ -141,6 +141,9 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
             port = self.comboBox.currentText()
             self.shiva.connect(port, baudrate)
             self.shiva.enableFeedback()
+            self.shiva.querySound()
+            self.shiva.queryThresholds()
+            self.shiva.queryChannelStatus()
             self.connectButton.setText('Disconnect')
             self.toggleChannelWidgets(True)
         elif self.connectButton.text() == 'Disconnect':
@@ -182,6 +185,18 @@ class ShivaGUI(QtGui.QWidget, LevelFeedbackReaderListener):
                 self.enabled_channels[channel] = 1
                 self.toggleChannelWidgets(True)
             self.feedback_arrived.emit(channel, value)
+        elif command == 5:
+            note_text = self.shiva.drum_name_from_id[value]
+            note_index = self.noteComboBoxes[channel].findText(note_text)
+            self.noteComboBoxes[channel].setCurrentIndex(note_index)
+        elif command == 6:
+            self.triggerThresholdSliders[channel].setValue(value)
+        elif command == 7:
+            self.offThresholdSliders[channel].setValue(value)
+        elif command == 8:
+            self.enabled_channels[channel] = value
+            self.toggleChannelWidgets(True)
+
 
 if __name__ == '__main__':
 

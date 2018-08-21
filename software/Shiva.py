@@ -10,6 +10,7 @@ __license__ = 'GPLv3'
 
 import serial
 import serial.threaded
+import time as t
 from LevelFeedbackReader import LevelFeedbackReader
 
 
@@ -27,6 +28,8 @@ class Shiva:
              "Long Whistle":72, "Short Guiro":73, "Long Guiro":74, "Claves":75, "High Wood Block":76, "Low Wood Block":77,
              "Mute Cuica":78, "Open Cuica":79, "Mute Triangle":80, "Open Triangle":81, "Shaker (GM2)":82, "Jingle Bell (GM2)":83,
              "Belltree (GM2)":84, "Castanets (GM2)":85, "Mute Surdo (GM2)":86, "Open Surdo (GM2)":87}
+
+    drum_name_from_id = {i: name for name, i in drums.items()}
 
     class ShivaNotConnectedException(BaseException):
         pass
@@ -107,8 +110,21 @@ class Shiva:
         if channel == -1:
             for i in range(self.num_channels):
                 self.sendCommand("S2C{}V{}".format(i, sound_code))
+                t.sleep(0.002)
         else:
             self.sendCommand("S2C{}V{}".format(channel, sound_code))
+
+    def querySound(self, channel=-1):
+        """
+        Queries the value of the midi note sent by each channel (command S5)
+        :param channel: Channel to modify (-1 means query all channels)
+        """
+        if channel == -1:
+            for i in range(self.num_channels):
+                self.sendCommand("S5C{}".format(i))
+                t.sleep(0.002)
+        else:
+            self.sendCommand("S5C{}".format(channel))
 
     def setThresholds(self, channel=-1, trigger=None, off=None):
         """
@@ -121,6 +137,7 @@ class Shiva:
             if channel == -1:
                 for i in range(self.num_channels):
                     self.sendCommand("S3C{}V{}".format(i, trigger))
+                    t.sleep(0.002)
             else:
                 self.sendCommand("S3C{}V{}".format(channel, trigger))
 
@@ -128,8 +145,38 @@ class Shiva:
             if channel == -1:
                 for i in range(self.num_channels):
                     self.sendCommand("S4C{}V{}".format(i, off))
+                    t.sleep(0.002)
             else:
                 self.sendCommand("S4C{}V{}".format(channel, off))
+
+    def queryThresholds(self, channel=-1):
+        """
+        Queries the value of the thresholds (Command S6 and S7)
+        :param channel: Channel to modify (-1 means all channels)
+        """
+
+        if channel == -1:
+            for i in range(self.num_channels):
+                self.sendCommand("S6C{}".format(i))
+                t.sleep(0.002)
+                self.sendCommand("S7C{}".format(i))
+                t.sleep(0.002)
+        else:
+            self.sendCommand("S6C{}".format(channel))
+            t.sleep(0.002)
+            self.sendCommand("S7C{}".format(channel))
+
+    def queryChannelStatus(self, channel=-1):
+        """
+        Queries the status of a given channel (active or inactive) (command S8)
+        :param channel: Channel to modify (-1 means query all channels)
+        """
+        if channel == -1:
+            for i in range(self.num_channels):
+                self.sendCommand("S8C{}".format(i))
+                t.sleep(0.002)
+        else:
+            self.sendCommand("S8C{}".format(channel))
 
     def _readPort(self):
         """
