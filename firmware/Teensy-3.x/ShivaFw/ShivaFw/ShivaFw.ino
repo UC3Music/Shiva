@@ -61,6 +61,11 @@ static elapsedMillis since_sensor_detect;
 static elapsedMillis since_joystick_read;
 
 //-- Joystick-related
+#define BUTTON_UP 0
+#define BUTTON_DOWN 1
+#define BUTTON_LEFT 2
+#define BUTTON_RIGHT 3
+#define BUTTON_ENTER 4
 static uint8_t button_pins[5] = {A0, 10, 12, A1, 11}; //-- up, down, left, right, enter
 static Bounce buttons[5] = { Bounce(button_pins[0], 10), //-- 10ms debounce
                              Bounce(button_pins[1], 10),
@@ -68,6 +73,9 @@ static Bounce buttons[5] = { Bounce(button_pins[0], 10), //-- 10ms debounce
                              Bounce(button_pins[3], 10),
                              Bounce(button_pins[4], 10)};
 static uint8_t button_status[5] = {0, 0, 0, 0, 0};
+static bool in_menu = false;
+static uint8_t current_channel_selected = 0;
+static uint8_t current_note_selected = 0; //-- Index in common_notes, not actual value
 
 //-- Detection thresholds
 static uint16_t trigger_thresholds[N_CHANNELS] = {100, 100, 100, 100, 100, 100, 100, 100};
@@ -84,7 +92,9 @@ void update_leds()
       if (led_status[i] == BLINKING)
         tone(channel_detect[i], BLINKING_RATE);
       else
-        digitalWrite(channel_detect[i], led_status[i]==1);
+      {
+        noTone(channel_detect[i]);
+        digitalWrite(channel_detect[i], led_status[i]==1);}
     }
    }
 }
@@ -96,7 +106,8 @@ void read_channel_status()
     noTone(i); //-- Tone interferes with status detection
     pinMode(channel_detect[i], INPUT_PULLUP);
     channel_enabled[i]=(int)digitalRead(channel_detect[i]);
-    led_status[i]=channel_enabled[i];
+    if (led_status[i]!=BLINKING)
+      led_status[i]=channel_enabled[i];
   }
 }
 
@@ -193,6 +204,15 @@ void parse_serial_command()
     buffer = "";
 }
 
+uint8_t next_active_channel(uint8_t start=0)
+{
+  return 0;
+  for (uint8_t i = 0; i < N_CHANNELS; i++)
+    if (channel_enabled[(start+i)%N_CHANNELS]==1)  //-- Go around to the beginning of the array when overflown
+      return i;
+  return -1;
+}
+
 void setup() 
 {
   //-- Init joystick
@@ -211,6 +231,10 @@ void setup()
     digitalWrite(channel_detect[i], HIGH);
     delay(200);
   }
+
+  //-- Read the joystick to init variables
+  for (uint8_t i = 0; i < 5; i++)
+    buttons[i].update();
 
   update_leds();
 }
@@ -240,6 +264,31 @@ void loop()
           button_status[i] = 1;
   }
 
+  //-- Menu state machine
+  if (button_status[BUTTON_ENTER]==1)
+  {
+    button_status[BUTTON_ENTER]=0;
+    if (in_menu) 
+    {
+      in_menu=false;
+      //-- Do stuff to when getting out of menu (i.e. saving values)
+      noTone(current_channel_selected);
+      led_status[current_channel_selected]=0;
+      Serial.println("Getting out of menu");
+    }
+    else
+    {
+      current_channel_selected = next_active_channel();
+      if (current_channel_selected != -1)
+      {
+        in_menu=true;
+        led_status[current_channel_selected]=BLINKING;
+        Serial.println("In menu");
+        Serial.println(current_channel_selected);
+        update_leds();
+      }
+    }
+  }
   /*
   //-- Check status (dummy test for development)
   for (uint8_t i = 0; i < 5; i++)
