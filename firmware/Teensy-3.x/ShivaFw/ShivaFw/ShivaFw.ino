@@ -14,6 +14,7 @@
 
 #include <Arduino.h>
 #include <MIDI.h>
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 #include <Bounce.h>
 
 //-- Constants
@@ -403,6 +404,7 @@ void loop()
       states[i] = 1;
       usbMIDI.sendNoteOn(notes[i], 64, 9);   // middle C, normal velocity, channel 9
       usbMIDI.send_now();
+      MIDI.sendNoteOn(notes[i], 64, 9);   // middle C, normal velocity, channel 9
     }
     else if (states[i] == 1 && sensor_values[i] < off_thresholds[i])
     {
@@ -410,6 +412,7 @@ void loop()
       states[i] = 0;
       usbMIDI.sendNoteOff(notes[i], 64, 9);  //  middle C, normal velocity, channel 9
       usbMIDI.send_now();
+      MIDI.sendNoteOff(notes[i], 64, 9);   // middle C, normal velocity, channel 9
     }
   }
 
