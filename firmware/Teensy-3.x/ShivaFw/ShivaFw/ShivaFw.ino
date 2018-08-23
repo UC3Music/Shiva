@@ -206,11 +206,27 @@ void parse_serial_command()
 
 uint8_t next_active_channel(uint8_t start=0)
 {
-  return 0;
   for (uint8_t i = 0; i < N_CHANNELS; i++)
     if (channel_enabled[(start+i)%N_CHANNELS]==1)  //-- Go around to the beginning of the array when overflown
-      return i;
+      return (start+i)%N_CHANNELS;
   return -1;
+}
+
+uint8_t previous_active_channel(uint8_t start=0)
+{
+  for (uint8_t i = 0; i < N_CHANNELS; i++)
+    if (channel_enabled[(start-i)%N_CHANNELS]==1)  //-- Go around to the end of the array when overflown
+      return (start-i)%N_CHANNELS;
+  return -1;
+}
+
+void exit_menu()
+{
+  in_menu=false;
+  //-- Do stuff to when getting out of menu (i.e. saving values)
+  noTone(current_channel_selected);
+  led_status[current_channel_selected]=0; //-- Give a status different than BLINKING
+  Serial.println("Getting out of menu");
 }
 
 void setup() 
@@ -265,19 +281,55 @@ void loop()
   }
 
   //-- Menu state machine
-  if (button_status[BUTTON_ENTER]==1)
+  if (in_menu)
   {
-    button_status[BUTTON_ENTER]=0;
-    if (in_menu) 
+    if (button_status[BUTTON_ENTER]==1) //-- Exit menu
     {
-      in_menu=false;
-      //-- Do stuff to when getting out of menu (i.e. saving values)
-      noTone(current_channel_selected);
-      led_status[current_channel_selected]=0;
-      Serial.println("Getting out of menu");
+      button_status[BUTTON_ENTER]=0;
+      exit_menu();
     }
-    else
+
+    if (button_status[BUTTON_UP]==1) //-- Go to next channel
     {
+      button_status[BUTTON_UP]=0;
+      noTone(current_channel_selected);
+      led_status[current_channel_selected]=0; //-- Give a status different than BLINKING
+      current_channel_selected = next_active_channel(current_channel_selected+1);
+      if (current_channel_selected != -1)
+      {
+        led_status[current_channel_selected]=BLINKING;
+        Serial.println(current_channel_selected);
+        update_leds();
+      }
+      else
+      {
+        exit_menu();
+      }
+    }
+
+    if (button_status[BUTTON_DOWN]==1) //-- Go to previous channel
+    {
+      button_status[BUTTON_DOWN]=0;
+      noTone(current_channel_selected);
+      led_status[current_channel_selected]=0; //-- Give a status different than BLINKING
+      current_channel_selected = previous_active_channel((current_channel_selected-1)%N_CHANNELS);
+      if (current_channel_selected != -1)
+      {
+        led_status[current_channel_selected]=BLINKING;
+        Serial.println(current_channel_selected);
+        update_leds();
+      }
+      else
+      {
+        exit_menu();
+      }
+    }
+  }
+  else
+  {
+    if (button_status[BUTTON_ENTER]==1) //-- Activate menu
+    {
+      button_status[BUTTON_ENTER]=0;
       current_channel_selected = next_active_channel();
       if (current_channel_selected != -1)
       {
@@ -287,8 +339,13 @@ void loop()
         Serial.println(current_channel_selected);
         update_leds();
       }
+      else
+      {
+        exit_menu();
+      }
     }
   }
+
   /*
   //-- Check status (dummy test for development)
   for (uint8_t i = 0; i < 5; i++)
