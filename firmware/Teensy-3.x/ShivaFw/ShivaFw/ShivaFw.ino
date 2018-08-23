@@ -25,7 +25,8 @@
 #define BAUD_RATE 9600
 static const uint8_t input_pins[N_CHANNELS] = {A2, A3, A4, A5, A9, A8, A7, A6};
 static const uint8_t channel_detect[N_CHANNELS] = {9, 8, 7, 6, 2, 3, 4, 5};
-static const uint8_t common_notes[19] = {36, //-- Bass Drum 1
+#define N_NOTES 19
+static const uint8_t common_notes[N_NOTES] = {36, //-- Bass Drum 1
                                          35, //-- Bass Drum 2
                                          38, //-- Snare Drum 1
                                          40, //-- Snare Drum 2
@@ -204,7 +205,7 @@ void parse_serial_command()
     buffer = "";
 }
 
-uint8_t next_active_channel(uint8_t start=0)
+int8_t next_active_channel(uint8_t start=0)
 {
   for (uint8_t i = 0; i < N_CHANNELS; i++)
     if (channel_enabled[(start+i)%N_CHANNELS]==1)  //-- Go around to the beginning of the array when overflown
@@ -212,13 +213,22 @@ uint8_t next_active_channel(uint8_t start=0)
   return -1;
 }
 
-uint8_t previous_active_channel(uint8_t start=0)
+int8_t previous_active_channel(uint8_t start=0)
 {
   for (uint8_t i = 0; i < N_CHANNELS; i++)
     if (channel_enabled[((uint8_t)(start-i))%N_CHANNELS]==1)  //-- Go around to the end of the array when overflown
       return ((uint8_t)(start-i))%N_CHANNELS;
   return -1;
 }
+
+int8_t get_note_index(uint8_t current_value) //-- Current note value (not index)
+{
+  for(uint8_t i = 0 ; i < N_NOTES; i++)
+    if (common_notes[i]==current_value)
+      return i;
+  return 0;
+}
+
 
 void exit_menu()
 {
@@ -324,6 +334,21 @@ void loop()
         exit_menu();
       }
     }
+
+    if (button_status[BUTTON_LEFT]==1) //-- Select previous note for current channel
+    {
+      button_status[BUTTON_LEFT]=0;
+      current_note_selected = get_note_index(notes[current_channel_selected]);
+      notes[current_channel_selected]=common_notes[((uint8_t)(current_note_selected-1))%N_NOTES];
+    }
+
+    if (button_status[BUTTON_RIGHT]==1) //-- Select next note for current channel
+    {
+      button_status[BUTTON_RIGHT]=0;
+      current_note_selected = get_note_index(notes[current_channel_selected]);
+      notes[current_channel_selected]=common_notes[(current_note_selected+1)%N_NOTES];
+    }
+    
   }
   else
   {
