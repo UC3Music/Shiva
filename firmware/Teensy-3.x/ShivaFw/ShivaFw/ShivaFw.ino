@@ -263,6 +263,9 @@ void setup()
   for (uint8_t i = 0; i < 5; i++)
     buttons[i].update();
 
+  //-- Init serial MIDI
+  MIDI.begin();
+  
   update_leds();
 }
 
