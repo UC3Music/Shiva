@@ -215,8 +215,8 @@ uint8_t next_active_channel(uint8_t start=0)
 uint8_t previous_active_channel(uint8_t start=0)
 {
   for (uint8_t i = 0; i < N_CHANNELS; i++)
-    if (channel_enabled[(start-i)%N_CHANNELS]==1)  //-- Go around to the end of the array when overflown
-      return (start-i)%N_CHANNELS;
+    if (channel_enabled[((uint8_t)(start-i))%N_CHANNELS]==1)  //-- Go around to the end of the array when overflown
+      return ((uint8_t)(start-i))%N_CHANNELS;
   return -1;
 }
 
@@ -295,7 +295,7 @@ void loop()
       noTone(current_channel_selected);
       led_status[current_channel_selected]=0; //-- Give a status different than BLINKING
       current_channel_selected = next_active_channel(current_channel_selected+1);
-      if (current_channel_selected != -1)
+      if (current_channel_selected != (uint8_t)-1)
       {
         led_status[current_channel_selected]=BLINKING;
         Serial.println(current_channel_selected);
@@ -312,8 +312,8 @@ void loop()
       button_status[BUTTON_DOWN]=0;
       noTone(current_channel_selected);
       led_status[current_channel_selected]=0; //-- Give a status different than BLINKING
-      current_channel_selected = previous_active_channel((current_channel_selected-1)%N_CHANNELS);
-      if (current_channel_selected != -1)
+      current_channel_selected = previous_active_channel((current_channel_selected-1)%N_CHANNELS); //-- This will only work ok with 8 channels
+      if (current_channel_selected != (uint8_t)-1)
       {
         led_status[current_channel_selected]=BLINKING;
         Serial.println(current_channel_selected);
@@ -331,7 +331,7 @@ void loop()
     {
       button_status[BUTTON_ENTER]=0;
       current_channel_selected = next_active_channel();
-      if (current_channel_selected != -1)
+      if (current_channel_selected != (uint8_t)-1)
       {
         in_menu=true;
         led_status[current_channel_selected]=BLINKING;
