@@ -24,7 +24,7 @@ MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 #define SENSOR_DETECT_RATE 500 //-- in ms
 #define JOYSTICK_READ_RATE 20 //-- in ms
 #define BAUD_RATE 9600
-static const uint8_t input_pins[N_CHANNELS] = {A2, A3, A4, A5, A9, A8, A7, A6};
+static const uint8_t input_pins[N_CHANNELS] = {A2, A4, A3, A5, A9, A8, A7, A6};
 static const uint8_t channel_detect[N_CHANNELS] = {9, 8, 7, 6, 2, 3, 4, 5};
 #define N_NOTES 19
 static const uint8_t common_notes[N_NOTES] = {36, //-- Bass Drum 1
@@ -80,7 +80,7 @@ static uint8_t current_channel_selected = 0;
 static uint8_t current_note_selected = 0; //-- Index in common_notes, not actual value
 
 //-- Detection thresholds
-static uint16_t trigger_thresholds[N_CHANNELS] = {100, 100, 100, 100, 100, 100, 100, 100};
+static uint16_t trigger_thresholds[N_CHANNELS] = {100, 100, 100, 1000, 1000, 1000, 1000, 1000};
 static uint16_t off_thresholds[N_CHANNELS] = {50, 50, 50, 50, 50, 50, 50, 50};
 
 
